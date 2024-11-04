@@ -54,6 +54,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         Register
                       </Link>
                     </li>
+                    <li className="nav-item">
+                      <Link href="/reels" className="nav-link">
+                        Reels
+                      </Link>
+                    </li>
                   </ul>
                 </div>
               </div>

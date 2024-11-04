@@ -1,0 +1,47 @@
+.reelsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    max-width: 500px; /* match with post list width */
+    margin: auto;
+  }
+  
+  .reelItem {
+    position: relative;
+    width: 100%;
+    padding-top: 125%; /* 4:5 aspect ratio */
+    overflow: hidden;
+    margin-bottom: 20px;
+    border-radius: 15px; /* Add border radius */
+  }
+  
+  .video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px; /* Same radius as the reel item */
+  }
+  
+  .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5); /* semi-transparent black background */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+  
+  .title, .description, .date {
+    margin: 0;
+  }
+  

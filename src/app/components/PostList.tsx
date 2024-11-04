@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Modal from "./modal";
-import PostModal from "./PostModal"; // Import the CreatePostModal component
-import styles from './PostList.module.css'; // Import the CSS module
+import PostModal from "./PostModal";
+import styles from "./PostList.module.css";
 
 interface Post {
   _id: string;
@@ -25,12 +25,17 @@ interface PostListProps {
   requireAuth?: boolean;
 }
 
-const PostList: React.FC<PostListProps> = ({ withModal = false, requireAuth = false }) => {
+const PostList: React.FC<PostListProps> = ({
+  withModal = false,
+  requireAuth = false,
+}) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false); // State for Create Post Modal
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -58,13 +63,20 @@ const PostList: React.FC<PostListProps> = ({ withModal = false, requireAuth = fa
     setSelectedPost(null);
   };
 
+  const handleMuteToggle = (index: number) => {
+    const video = videoRefs.current[index];
+    if (video) {
+      video.muted = !video.muted;
+    }
+  };
+
   const handleCloseCreateModal = () => {
     setShowCreateModal(false);
   };
 
   const handleDeletePost = async () => {
     if (selectedPost) {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       try {
         await axios.delete(`${API_BASE_URL}/posts?id=${selectedPost._id}`, {
           headers: {
@@ -81,15 +93,18 @@ const PostList: React.FC<PostListProps> = ({ withModal = false, requireAuth = fa
 
   const handleUpdatePost = async (updatedPost: Partial<Post>) => {
     if (selectedPost) {
-      const token = localStorage.getItem('token'); // Retrieve the token from local storage
+      const token = localStorage.getItem("token");
       try {
-        await axios.put(`${API_BASE_URL}/posts?id=${selectedPost._id}`, updatedPost, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add the token to the Authorization header
-          },
-        });
+        await axios.put(
+          `${API_BASE_URL}/posts?id=${selectedPost._id}`,
+          updatedPost,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        // Update the post list with the new data
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
             post._id === selectedPost._id ? { ...post, ...updatedPost } : post
@@ -106,38 +121,35 @@ const PostList: React.FC<PostListProps> = ({ withModal = false, requireAuth = fa
   const handleCreatePost = async (Post: NewPost) => {
     const token = localStorage.getItem("token");
     const formData = new FormData();
-  
+
     formData.append("title", Post.title);
     formData.append("description", Post.description);
-  
+
     if (Post.mediaFile) {
       formData.append("mediaPath", Post.mediaFile);
     }
-    formData.forEach((value, key) => {
-      console.log(key, value); // Log to verify the appended data
-    });
-  
-    console.log(Post); // For debugging purposes
-  
+
     try {
       const response = await axios.post(`${API_BASE_URL}/posts`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`, // Removed Content-Type
+          Authorization: `Bearer ${token}`,
         },
       });
-  
+
       setPosts((prevPosts) => [...prevPosts, response.data.post]);
       handleCloseCreateModal();
     } catch (error) {
       console.error("Error creating post", error);
     }
   };
-  
 
   return (
     <div className="container my-4">
       <h2 className="mb-4">Blog Posts</h2>
-      <button className="btn btn-primary mb-4" onClick={() => {console.log("Create New Post clicked"); setShowCreateModal(true)}}>
+      <button
+        className="btn btn-primary mb-4"
+        onClick={() => setShowCreateModal(true)}
+      >
         Create New Post
       </button>
       <div className="row">
@@ -146,27 +158,41 @@ const PostList: React.FC<PostListProps> = ({ withModal = false, requireAuth = fa
             <p>No posts available. Be the first to create a post!</p>
           </div>
         ) : (
-          posts.map((post) => (
-            <div key={post._id} className="col-12 mb-4"> {/* Ensure only one post per line */}
-              <div className={`card ${styles.card}`}>
+          posts.map((post, index) => (
+            <div
+              key={post._id}
+              className="col-12 d-flex justify-content-center mb-4"
+            >
+              <div className={styles.portraitModeContainer}>
                 {post.mediaPath && (
-                  <div className="card-img-top">
-                    {post.mediaType?.startsWith("image") ? (
-                      <img
-                        className={styles.media} // Apply the media class
-                        src={`${API_BASE_URL}/posts/media?id=${post._id}`}
-                        alt={post.title}
-                      />
-                    ) : post.mediaType?.startsWith("video") ? (
-                      <video
-                        controls
-                        className={styles.media} // Apply the media class
-                        src={`${API_BASE_URL}/posts/media?id=${post._id}`}
-                      />
+                  <div className="card-img-top" style={{ cursor: "pointer" }}>
+                    {post.mediaType?.startsWith("video") ? (
+                      <div className={styles.media}>
+                        <video
+                          ref={(el) => {
+                            videoRefs.current[index] = el;
+                          }}
+                          muted
+                          autoPlay
+                          loop
+                          controls
+                          playsInline
+                          className={styles.media}
+                          src={`${API_BASE_URL}/posts/media?id=${post._id}`}
+                        />
+                      </div>
+                    ) : post.mediaType?.startsWith("image") ? (
+                      <div className={styles.media}>
+                        <img
+                          className={styles.media}
+                          src={`${API_BASE_URL}/posts/media?id=${post._id}`}
+                          alt={post.title}
+                        />
+                      </div>
                     ) : post.mediaType?.startsWith("audio") ? (
                       <audio
                         controls
-                        className={styles.media} // Apply the media class
+                        className={styles.media}
                         src={`${API_BASE_URL}/posts/media?id=${post._id}`}
                       />
                     ) : null}
@@ -178,7 +204,10 @@ const PostList: React.FC<PostListProps> = ({ withModal = false, requireAuth = fa
                   <p className="text-muted">
                     Published on: {new Date(post.createdAt).toLocaleDateString()}
                   </p>
-                  <button className="btn btn-primary" onClick={() => handleViewPost(post)}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleViewPost(post)}
+                  >
                     View Post
                   </button>
                 </div>
@@ -188,7 +217,6 @@ const PostList: React.FC<PostListProps> = ({ withModal = false, requireAuth = fa
         )}
       </div>
 
-      {/* Modal for viewing post details */}
       {withModal && selectedPost && (
         <Modal
           show={showModal}
@@ -198,12 +226,15 @@ const PostList: React.FC<PostListProps> = ({ withModal = false, requireAuth = fa
           mediaPath={`${API_BASE_URL}/posts/media?id=${selectedPost._id}`}
           mediaType={selectedPost.mediaType}
           onDelete={handleDeletePost}
-          onUpdate={handleUpdatePost} // Pass the handleUpdatePost function here
+          onUpdate={handleUpdatePost}
         />
       )}
 
-      {/* Create Post Modal */}
-      <PostModal isOpen={showCreateModal} onClose={handleCloseCreateModal} onCreate={handleCreatePost} />
+      <PostModal
+        isOpen={showCreateModal}
+        onClose={handleCloseCreateModal}
+        onCreate={handleCreatePost}
+      />
     </div>
   );
 };

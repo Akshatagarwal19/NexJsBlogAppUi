@@ -1,11 +1,83 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
 .card {
-    max-width: 800px; /* Adjust as necessary */
-    margin: 0 auto;
-    width: 100%; /* Center the card */
-  }
+  width: 100%;
+  max-width: 400px; /* Uniform width for all posts */
+  margin: 1rem auto; /* Center each card with margin */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card.with-media {
+  height: 600px; /* Adjusted height for image/video posts */
+}
+
+.card.with-audio,
+.card.no-media {
+  height: 300px; /* Adjusted height for audio or text-only posts */
+}
+
+.portraitModeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px; /* Consistent width */
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
 
 .media {
-    width: 100%;
-    height: 400%;
-    object-fit: cover;
+  width: 100%;
+  aspect-ratio: 4 / 5; /* Consistent portrait aspect ratio */
+  object-fit: cover;
+}
+
+.media img,
+.media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-body {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box; /* Ensures padding doesn't affect total width */
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  width: 100%; /* Matches fixed card width */
+  white-space: nowrap; /* Prevents title from expanding the container */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds ellipsis if title is too long */
+}
+
+.card-text {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  width: 100%; /* Matches fixed card width */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds ellipsis if description is too long */
+}
+
+.btn {
+  margin-top: 0.5rem;
 }
