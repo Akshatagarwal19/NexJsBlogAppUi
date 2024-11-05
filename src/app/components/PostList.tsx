@@ -64,13 +64,6 @@ const PostList: React.FC<PostListProps> = ({
     setSelectedPost(null);
   };
 
-  // const handleMuteToggle = (index: number) => {
-  //   const video = videoRefs.current[index];
-  //   if (video) {
-  //     video.muted = !video.muted;
-  //   }
-  // };
-
   const handleCloseCreateModal = () => {
     setShowCreateModal(false);
   };
