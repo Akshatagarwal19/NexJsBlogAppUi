@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Modal from "./modal";
+import Image from "next/image";
 import PostModal from "./PostModal";
 import styles from "./PostList.module.css";
 
@@ -63,12 +64,12 @@ const PostList: React.FC<PostListProps> = ({
     setSelectedPost(null);
   };
 
-  const handleMuteToggle = (index: number) => {
-    const video = videoRefs.current[index];
-    if (video) {
-      video.muted = !video.muted;
-    }
-  };
+  // const handleMuteToggle = (index: number) => {
+  //   const video = videoRefs.current[index];
+  //   if (video) {
+  //     video.muted = !video.muted;
+  //   }
+  // };
 
   const handleCloseCreateModal = () => {
     setShowCreateModal(false);
@@ -173,7 +174,6 @@ const PostList: React.FC<PostListProps> = ({
                             videoRefs.current[index] = el;
                           }}
                           muted
-                          autoPlay
                           loop
                           controls
                           playsInline
@@ -183,11 +183,7 @@ const PostList: React.FC<PostListProps> = ({
                       </div>
                     ) : post.mediaType?.startsWith("image") ? (
                       <div className={styles.media}>
-                        <img
-                          className={styles.media}
-                          src={`${API_BASE_URL}/posts/media?id=${post._id}`}
-                          alt={post.title}
-                        />
+                        <Image className={styles.media} src={`${API_BASE_URL}/posts/media?id=${post._id}`} width={300} height={400} alt={post.title} />
                       </div>
                     ) : post.mediaType?.startsWith("audio") ? (
                       <audio
@@ -210,6 +206,7 @@ const PostList: React.FC<PostListProps> = ({
                   >
                     View Post
                   </button>
+                  <hr className={styles.separator} />
                 </div>
               </div>
             </div>

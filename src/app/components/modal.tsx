@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import './modal.styles.css'; // Import the modal styles
+import './modal.styles.css';
+import Image from "next/image"; // Import the modal styles
 
 interface ModalProps {
   show: boolean;
@@ -56,7 +57,7 @@ const Modal: React.FC<ModalProps> = ({
             <p>{description}</p>
 
             {mediaPath && mediaType?.startsWith("image") && (
-              <img src={mediaPath} alt={title} className="img-fluid" />
+              <Image src={mediaPath} alt={title} className="img-fluid" />
             )}
 
             {mediaPath && mediaType?.startsWith("video") && (

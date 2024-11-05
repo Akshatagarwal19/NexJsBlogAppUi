@@ -20,6 +20,7 @@ const Register = () => {
     }
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`, {
         name,
         email,

@@ -11,8 +11,9 @@
   margin: 1rem auto; /* Center each card with margin */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  border-radius: 10px;
+  align-items: flex-start;
+  border: 10px solid gray;
+  border-radius: 2px;
   background-color: #f9f9f9;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -30,8 +31,8 @@
 .portraitModeContainer {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
+  align-items: flex-start;
+  width: 400px;
   max-width: 400px; /* Consistent width */
   margin: 0 auto;
   border-radius: 10px;
@@ -44,7 +45,7 @@
   object-fit: cover;
 }
 
-.media img,
+.media Image,
 .media video {
   width: 100%;
   height: 100%;
@@ -56,15 +57,15 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   box-sizing: border-box; /* Ensures padding doesn't affect total width */
 }
 
 .card-title {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
-  width: 100%; /* Matches fixed card width */
+  width: 400px; /* Matches fixed card width */
   white-space: nowrap; /* Prevents title from expanding the container */
   overflow: hidden;
   text-overflow: ellipsis; /* Adds ellipsis if title is too long */
@@ -73,11 +74,18 @@
 .card-text {
   font-size: 1rem;
   margin-bottom: 1rem;
-  width: 100%; /* Matches fixed card width */
+  width: 400px; /* Matches fixed card width */
   overflow: hidden;
   text-overflow: ellipsis; /* Adds ellipsis if description is too long */
 }
 
 .btn {
   margin-top: 0.5rem;
+}
+
+.separator {
+  width: 400px;
+  height: 1px; /* Thickness of the line */
+  background-color: gray; /* Color of the line */
+  margin: 30 0; /* Adjust margin as needed */
 }

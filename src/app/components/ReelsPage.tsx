@@ -56,7 +56,6 @@ const ReelsPage: React.FC = () => {
               videoRefs.current[index] = el;
             }}
             muted
-            autoPlay
             loop
             playsInline
             className={styles.video}

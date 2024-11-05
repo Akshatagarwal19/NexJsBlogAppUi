@@ -1,26 +1,39 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap styles
+import Script from "next/script"; // Import Script
+import "bootstrap/dist/css/bootstrap.min.css";
 
 interface LayoutProps {
-  children: React.ReactNode; // Specify that children is of type ReactNode
+  children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Apply the dark theme class to the body if darkMode is true
+    if (darkMode) {
+      document.documentElement.classList.add("dark-theme");
+    } else {
+      document.documentElement.classList.remove("dark-theme");
+    }
+  }, [darkMode]);
+
+  const handleThemeToggle = () => {
+    setDarkMode((prevMode) => !prevMode);
+  };
+
   return (
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-          name="description"
-          content="Your website description goes here."
-        />
         <title>Blogs App</title>
       </head>
       <body>
         <div className="container">
-          <header className="p-4 bg-dark text-white">
+          <header className="p-4 theme-header bg-dark text-white d-flex justify-content-between align-items-center">
             <nav className="navbar navbar-expand-lg navbar-dark">
               <div className="container-fluid">
                 <Link href="/" className="navbar-brand">
@@ -63,14 +76,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </div>
               </div>
             </nav>
+            {/* Theme Toggle Button */}
+            <button
+              onClick={handleThemeToggle}
+              className="btn btn-secondary"
+              aria-label="Toggle Theme"
+            >
+              {darkMode ? "Light Mode" : "Dark Mode"}
+            </button>
           </header>
           <main className="my-4">{children}</main>
           <footer className="p-4 bg-dark text-white text-center">
             <p>&copy; {new Date().getFullYear()} My Blog. All Rights Reserved.</p>
           </footer>
         </div>
-        {/* Bootstrap JS for functionalities like dropdowns, modals, etc. */}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        {/* Load Bootstrap JS asynchronously */}
+        <Script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );
